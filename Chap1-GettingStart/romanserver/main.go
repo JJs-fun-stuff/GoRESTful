@@ -13,10 +13,12 @@ import (
 func main() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		urlPathElements := strings.Split(r.URL.Path, "/")
-		fmt.Println(urlPathElements)
 		if urlPathElements[1] == "roman_number" {
+			//strconv.Atoi convert alphanumeric string -> actual integer 
+			// "1" -> 1
 			number, _ := strconv.Atoi(strings.TrimSpace(urlPathElements[2]))
 			if number == 0 || number > 10 {
+				// WriteHeader, Write available for response object
 				w.WriteHeader(http.StatusNotFound)
 				w.Write([]byte("404 - Not Found"))
 			} else {
