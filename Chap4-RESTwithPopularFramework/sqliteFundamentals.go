@@ -41,8 +41,7 @@ func main() {
 		statement, _ = db.Prepare("UPDATE books set name=? where id=?")
 		statement.Exec("A Tale of Two Cities", 1)
 		log.Println("Successfully updated a table books")
-		
-		
+			
 		//Delete table
 		statement, _ = db.Prepare("DELETE from books WHERE id=?")
 		statement.Exec(1)

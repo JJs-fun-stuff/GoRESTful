@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"github.com/gin-gonic/gin"
 	_ "github.com/mattn/go-sqlite3"
-	"C:\Users\jojogelato\go\src\github.com\JJs-fun-stuff\Chap4-RESTwithPopularFramework\dbutils"
+	"C:\\Users\\jojogelato\\go\\src\\github.com\\JJs-fun-stuff\\Chap4-RESTwithPopularFramework\\dbutils"
 )
 
 var DB *sql.DB
