@@ -21,13 +21,13 @@ func main(){
 		OperatingStatus bool
 	}
 
-	type StationnResource struct {
+	type StationResource struct {
 		ID int
-		Name string
+		StationName string
 		OpeningTime time.Time
 		ClosingTime time.Time
 	}
-
+	
 	type ScheduleResource struct {
 		ID int 
 		TrainID int
@@ -35,12 +35,15 @@ func main(){
 		ArrivalTime time.Time
 	}
 
+	type 
 	// Connect to the database
 	DB, err := sql.Open("sqlite3","./railapi.db")
 
 	if err != nil{
 		log.Println("Driver creation failed!")
 	}
+	
+	D
 
 	// Create tables
 	dbutils.Initialize(DB)
@@ -48,13 +51,14 @@ func main(){
 	ws.Conatainer.Router(restful.CurlyRouter{})
 
 	t := TrainResource{}
-	t.Register(wsContainer)
+	t.TrainRegister(wsContainer)
+	t.StationRegister(wsContainer)
 	log.Printf("start listening on localhost:8000")
 	server := &http.Server{ Addr: ":8000", Handler: wsContainer}
 	log.Fatal(server.ListenAndServe())
 }
 
-func (t *TrainResource) Register(container *restful.Container){
+func (t *TrainResource) TrainRegister(container *restful.Container){
 
 	// Initialize a web service
 	ws := new(restful.WebService)
@@ -67,10 +71,23 @@ func (t *TrainResource) Register(container *restful.Container){
 	ws.Route(ws.GET("/{train-id}").To(t.getTrain))
 	ws.Route(ws.POST("").To(t.createTrain))
 	ws.Route(ws.DELETE("/{train-id}").To(t.deleteTrain))
-	
 
 	// Add the service to application
 	container.Add(ws)
+}
+
+func(s *StationResource) StationRegister(container *restful.Container){
+	ws := new(restful.WebService)
+	ws.Path("/v1/stations")
+	Consumes(restful.MIME_JSON)
+	Produces.(restful.MIME_JSON)
+
+	ws.Route(ws.GET("/{station-id}").to(s.getStation))
+	ws.Route(ws.POST("").to(s.createStation))
+	ws.Route(ws.DELETE("/{station-id}").to(s.deleteStation))
+
+	container.add(ws)
+
 }
 
 // GET localhost:8000/v1/trains/1
@@ -119,5 +136,30 @@ func (t TrainResource) deleteTrain(request *restful.Request, response *restful.R
 		response.AddHeader("Content-Type","text/plain")
 		response.WriteErrorString(http.StatuseInternalServerError, err.Error())
 	}
+
+
+//GET http://localhost:8000/v1/stations/1
+func(s StationResource) getStation(request *restful.Request, response *restful.Response){
+	id := request.PathParameter("station-id")
+	
+	err := DB.QueryRow("select ID, NAME, OPENING_TIME, CLOSING_TIME FROM station where id =?").Scan(&s.ID, &s.StationName, &s.OpeningTime, &s.ClosingTime)
+
+	if err != nil{
+		response.AddHeader("Content-Type","text/plain")
+		response.WriteErrorString(http.StatusNotFound, "Station could not be found")
+	}
+	else {
+		response.WriteEntity(s)
+	}
+}
+//POST http://localhost:8000/v1/stations
+func(s StationResource) createStation(request *restful.Request, response *restful.Response){
+	
+}
+//DELETE http://localhost:8000/v1/stations/1
+func(s StationResource) deleteStation(request *restful.Request, response *restful.Response){
+	
+}
+
 }
 
